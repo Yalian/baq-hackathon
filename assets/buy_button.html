@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src=" https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://sandbox-paybox.pagoplux.com/paybox/index.js"></script>
+
+    <title>Simple Page</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .centered-div {
+            width: 300px;
+            padding: 20px;
+            text-align: center;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+    </style>
+    <script>
+        var data = {
+/* Requerido. Email del establecimiento o Id/Class  del elemento html que posee el valor */
+     PayboxRemail: "abautista@pagoplux.com",
+/* Opcional. Email del usuario que realiza el pago o Id/Class del elemento html que posee el valor */
+     PayboxSendmail: "correocliente@gmail.com",
+/* Requerido. Nombre del usuario/cuenta Plux o Id/Class del elemento html que posee el valor */
+     PayboxRename: "abautista@pagoplux.com",
+/* Opcional. nombre de persona que realiza el pago o Id/Class del elemento html */
+     PayboxSendname: "Jhon Doe",
+/* Requerido. Valor Base 0. Valor que no incluye impuesto */
+     PayboxBase0: "2.0",
+/* Requerido. Valor Base 12. Valor que si incluye impuesto */
+     PayboxBase12: "10.0",
+/* Requerido. Descripcion del pago o Id/Class del elemento html que posee el valor */
+     PayboxDescription: "Descripcion del pago",
+/* Opcional. Lenguaje del Paybox
+ * Español: es | (string) (Paybox en español)
+ * Inglés: us | (string) (Paybox en Inglés)*/
+     PayboxLanguage: "es",
+/* Requerido. direccion del pago */
+     PayboxDirection: "Dirección tarjetahabiente",
+/*Requerido. Teléfono del cliente */
+     PayBoxClientPhone: 'Teléfono tarjetahabiente',
+/**
+* True -> producción
+* False -> test */
+     PayboxProduction: false,
+// ===============================LOS SIGUIENTES PARÁMETROS SOLO SE USA EN PAGOS RECURRENTES============================================
+/* True -> en caso de realizar un pago recurrente almacena datos tarjeta
+* False -> si es pago normal */
+     PayboxRecurrent: true,
+/* Id o nombre del plan registrado en el comercio en la plataforma de plux (el nombre debe ser exacto) */
+      PayboxIdPlan: '171',
+/* true -> los cobros se realizan de manera automática según la frecuencia del plan asignado en PLUX
+* false -> los cobros se realizan mediante solicitud */
+      PayboxPermitirCalendarizar: true,
+/**
+* true -> El débito se realiza en el momento del pago
+* false -> El débito se realizará en la fecha de corte según el plan contratado */
+      PayboxPagoInmediato: true,
+/**
+ * true -> si desea realizar un pago de prueba de 1$ y reverso del mismo de manera automática
+ * nota: PayboxPagoImediato debe ser igual false
+ * false -> no se realizará ningún cobro de prueba */
+     PayboxCobroPrueba: false,
+/**
+* Valor de identificación de tarjetahabiente
+*/
+     PayBoxClientIdentification: 'Cédula tarjetahabiente',
+/* Entorno de ejecución del botón de pagos valores:  prod (ambiente de producción), sandbox (ambiente de pruebas)*/
+     PayboxEnvironment: 'sandbox',
+//<----ESTAS VARIABLES SE USAN PARA PAGOS RECURRENTES CON MONTO VARIABLES ---->
+     PayboxAmountVariablePlan: true,
+/*Frecuencia del plan
+"SEM"            SEMANAL
+"MEN"            MENSUAL
+"BME"            BIMESTRAL
+"TME"            TRIMESTRAL
+"SME"            SEMESTRAL
+"ANU"            ANUAL */
+     PayboxFrequencyPlan: 'MEN',
+/**
+* true ->tiene iva
+* false ->no tiene iva
+*/
+     PayboxTieneIvaPlan: true,
+/**
+* La descripción del plan, no debe superar los 200 caracteres.
+*/
+     PayboxDescriptionPlan: 'Descripcion plan',
+/**
+* Se usa en TRUE cuando se necesita enlazar el paybox a un botón ya existente en el sitio del cliente, caso contrario FALSE o NULL
+*/
+     PayboxPagoPlux: false,
+/* Requerido para manejo de ofertas
+* Nombre del evento configurado, que podría hacer referencia a una oferta de tipo descuento y preventa. */
+     PayboxEvento: 'Evento descuento uno',
+/* Opcional
+* true o false->
+* Bandera booleana que permite o no pagos solo con tarjeta de crédito.
+*/
+     PayboxOnlyCredit: true,
+/* Opcional
+* true o false->
+* Bandera booleana que permite o no pagos solo con tarjeta de débito.
+*/
+     PayboxOnlyDebit: true,
+/**
+* Identificador del botón o elemento en el comercio del cliente
+*/
+     PayboxIdElement: 'idElementoTest',
+/**
+* Información adicional a incluir en la transacción como un ID único
+*/
+     PayboxExtras: 'id de pedido',
+/**
+* Habilita SOLO la forma de pago de tipo corriente, caso contrario se muestran las opciones de corriente y diferidos
+*/
+     PayboxPermitirBloquearDiferimientos: true,
+/**
+* Permite agregar los campos de entradas para dirección y teléfono del tarjeta habiente
+*/
+     PayboxPermitirDatosAdicionales: true
+};
+     
+        const onAuthorize = (response) => {
+        console.log(response);
+        // Aquí puedes manejar la respuesta del pago
+        if (response.status === 'succeeded') {
+            console.log('Pago exitoso:', response);
+        } else {
+            console.log('Error en el pago:', response);
+        }
+    };
+
+//      var onAuthorize = function(response)
+//    {
+//    // La variable response posee un Objeto con la respuesta de Plux.
+//    if (response.status == 'succeeded')
+//    {
+   // Pago exitoso response contiene la información del pago la cual puede  
+  // usarse para validaciones que depende del tipo de pago realizado
+     //    acquirer: "INTERNA", // Entidad adquirente
+     //    amount: 120,  // Monto total
+     //    amountAuthorized: 0, // Monto autorizado
+     //    amountWTaxes: "0.00", // Monto con impuestos
+     //    amountWoTaxes: "1.00", // Monto sin impuestos
+     //    cardInfo: "4540 63XX XXXX 8783", // Información de la tarjeta
+     //    cardIssuer: "VISA", // Emisor de la tarjeta
+     //    cardType: "credit", // Tipo de tarjeta
+     //    clientID: "1010101010", // Cédula/RUC del cliente
+     //    clientName: "NOMBRE CLIENTE", // Nombre del cliente
+     //    deferred: 0,  // Diferido (0 = no)
+     //    description: "Descripcion del pago", // Descripción del pago
+     //    direction: "Direccion de cliente",  // Dirección
+     //    discountRate: null, // Tasa de descuento (nulo)
+     //    email: "correo@gmail.com", // Correo del cliente
+     //    extras: "extras", // Campos extra
+     //    fecha: "2025-04-29 11:35:46", // Fecha de la transacción
+     //    fullname: "NOMBRE CLIENTE", // Nombre completo
+     //    id_transaccion: "48c1176b-a4ff-42d7-a4ef-28087ac90501", // ID de transacción
+     //    interestValue: 0,  // Valor de intereses
+     //    interests: "NO",  // Tiene intereses
+     //    mid: "0000000000", // ID del comercio
+     //    paymentType: "UNIQUE", // Tipo de pago
+     //    phone: "999999999", // Teléfono del cliente
+     //    state: "PAGADO", // Estado del pago
+     //    taxesValue: "0.00", // Valor de impuestos
+     //    tid: "PX000000", // TID terminal
+     //    tipoPago: "TARJETA", // Tipo de pago
+     //    token: "398762-250429-008368"  // Token de transacción
+    
+    //};
+
+    
+    </script>
+</head>
+<body>
+    <div class="centered-div">
+        <!-- Add your content here -->
+        <p>Hello World</p>
+         <div id="ButtonPaybox"></div>
+    </div>
+</body>
+<script type="text/javascript">
+  
+
+</script>
+</html>
