@@ -36,3 +36,6 @@ coverage/
 *.tmp
 *.orig
 *.rej
+
+data/*.json
+data/*.csv

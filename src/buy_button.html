@@ -18,7 +18,7 @@
             background-color: #f4f4f4;
         }
         .centered-div {
-            width: 300px;
+            width: auto;
             padding: 20px;
             text-align: center;
             background-color: #fff;
@@ -27,6 +27,9 @@
             border-radius: 8px;
         }
     </style>
+    <script async
+  src="https://js.stripe.com/v3/buy-button.js">
+</script>
     <script>
         var data = {
 /* Requerido. Email del establecimiento o Id/Class  del elemento html que posee el valor */
@@ -118,7 +121,7 @@
 /**
 * Identificador del botón o elemento en el comercio del cliente
 */
-     PayboxIdElement: 'idElementoTest',
+     PayboxIdElement: 'plux-button',
 /**
 * Información adicional a incluir en la transacción como un ID único
 */
@@ -134,13 +137,24 @@
 };
      
         const onAuthorize = (response) => {
-        console.log(response);
-        // Aquí puedes manejar la respuesta del pago
-        if (response.status === 'succeeded') {
-            console.log('Pago exitoso:', response);
-        } else {
-            console.log('Error en el pago:', response);
-        }
+          console.log(response);
+          fetch("http://149.50.206.37:3000/leads", {
+               method: "POST",
+               headers: {
+                    "Content-Type": "application/json"
+               },
+               body: JSON.stringify(response)
+          }).then((res) => {
+               console.log(res);
+          }).catch((error) => {
+               console.error("Error:", error);
+          });
+          // Aquí puedes manejar la respuesta del pago
+          if (response.status === 'succeeded') {
+               console.log('Pago exitoso:', response);
+          } else {
+               console.log('Error en el pago:', response);
+          }
     };
 
 //      var onAuthorize = function(response)
@@ -186,14 +200,23 @@
     </script>
 </head>
 <body>
-    <div class="centered-div">
+    <div class="centered-div" style="flex-direction: row; display: flex;">
         <!-- Add your content here -->
-        <p>Hello World</p>
+     <div>
+          <h1>Pago Plux</h1>
          <div id="ButtonPaybox"></div>
+     </div>
+  
+     <div style="margin-left: 24px;">
+          <h1>Stripe</h1>
+
+          <stripe-buy-button
+               buy-button-id="buy_btn_1RQ8HeF8nKa6EsalV9tKuxiA"
+               publishable-key="pk_test_51MMyd2F8nKa6EsaljdMwi1bhD5uYgZuI9CekEHyIaW8Cemc6V5ScWaYk47nWXEyKCR9TA5Cd3Iiy4jv92Fjar5EN00s6KSD4Dx"
+          >
+          </stripe-buy-button>
+     </div>
+
     </div>
 </body>
-<script type="text/javascript">
-  
-
-</script>
 </html>
